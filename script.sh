@@ -1,3 +1,4 @@
+```bash
 #!/bin/bash
 
 # -------------------------------------------------------
@@ -34,6 +35,15 @@ read -p "Enter your age: " user_age
 echo "You are $user_age years old"
 
 # -------------------------------------------------------
+# Command-Line Arguments
+# You can pass arguments to your script when you execute it.
+# $1, $2, $3, ... are used to access the arguments.
+echo "Argument 1: $1"
+echo "Argument 2: $2"
+echo "All arguments: $@"
+echo "Number of arguments: $#"
+
+# -------------------------------------------------------
 # Conditions
 # Conditional statements are used to perform different actions based on conditions.
 
@@ -49,29 +59,29 @@ if [ 18 -eq 18 ]; then
     echo "18 equals 18"
 fi
 
-# The next condition will not print since 18 is equal to 18.
-if [ 18 -ne 18 ]; then
-    echo "18 not equals 18"
+# String comparison operators:
+# = : Equal to
+# != : Not equal to
+# -z : Check if string is empty
+# -n : Check if string is not empty
+
+string1="hello"
+string2="world"
+
+if [ "$string1" = "hello" ]; then
+    echo "string1 is hello"
 fi
 
-# This condition checks if 18 is greater than 18, which it is not, so it won't print.
-if [ 18 -gt 18 ]; then
-    echo "18 is greater than 18"
+if [ "$string1" != "$string2" ]; then
+    echo "string1 and string2 are different"
 fi
 
-# Similarly, this checks if 18 is less than 18, which is false.
-if [ 18 -lt 18 ]; then
-    echo "18 is less than 18"
+if [ -z "$empty_string" ]; then
+    echo "empty_string is empty"
 fi
 
-# Checks if 18 is greater than or equal to 18, which is true.
-if [ 18 -ge 18 ]; then
-    echo "18 is greater or equal to 18"
-fi
-
-# Checks if 18 is less than or equal to 18, which is true.
-if [ 18 -le 18 ]; then
-    echo "18 is less or equal to 18"
+if [ -n "$string1" ]; then
+    echo "string1 is not empty"
 fi
 
 # -------------------------------------------------------
@@ -83,6 +93,7 @@ fi
 # -x : Check if it's executable
 # -r : Check if it's readable
 # -w : Check if it's writable
+# -e : Check if file exists
 
 file="./file.txt"  # File path we want to check
 
@@ -92,6 +103,14 @@ elif [ -d "$file" ]; then
     echo "$file exists and is a directory."
 else
     echo "$file does not exist."
+fi
+
+if [ -e "$file" ]; then
+    echo "$file exists."
+fi
+
+if [ -r "$file" ]; then
+    echo "$file is readable."
 fi
 
 # -------------------------------------------------------
@@ -145,11 +164,23 @@ for i in {1..5}; do
     echo "Iteration $i"  # This will print from 1 to 5.
 done
 
+# For loop: Looping through a list of items
+for item in "apple" "banana" "cherry"; do
+    echo "Fruit: $item"
+done
+
 # While loop: Continues looping as long as the condition is true
 count=1
 while [ $count -le 5 ]; do
     echo "Count is $count"
     ((count++))  # Increment count by 1
+done
+
+# Until loop: Continues looping until the condition is true
+count=1
+until [ $count -gt 5 ]; do
+    echo "Count is $count"
+    ((count++))
 done
 
 # -------------------------------------------------------
@@ -159,10 +190,12 @@ done
 # Define a function
 my_function() {
     echo "This is my first function!"
+    echo "Argument 1 inside function: $1"
+    echo "Argument 2 inside function: $2"
 }
 
 # Call the function
-my_function
+my_function "Hello" "World"
 
 # -------------------------------------------------------
 # Arithmetic
@@ -184,9 +217,25 @@ echo "The result of 5 + 3 using expr is: $result"
 echo "This is a message" > output.txt  # Writes to the file (overwrites)
 cat output.txt  # Displays the content of output.txt
 
+echo "Another message" >> output.txt # Append to the file.
+cat output.txt
+
 # Redirecting errors
 echo "This is an error message" 2> error.txt  # Writes errors to error.txt
 cat error.txt  # Displays the error content
+
+# Redirecting standard output and error
+echo "Standard output and error" &> combined.txt
+cat combined.txt
+
+# Here Documents
+cat <<EOF
+This is a multi-line string.
+It can contain multiple lines.
+EOF
+
+# Here Strings
+echo <<< "This is a single line string"
 
 # -------------------------------------------------------
 # Piping
@@ -194,6 +243,7 @@ cat error.txt  # Displays the error content
 
 echo "Hello" | tr 'a-z' 'A-Z'  # Converts text to uppercase
 echo "Hello" | rev  # Reverses the string
+echo "Hello World" | grep "World" #Find a pattern
 
 # -------------------------------------------------------
 # Exit Statuses
@@ -204,19 +254,4 @@ echo "Hello"
 if [ $? -eq 0 ]; then  # Checks if the last command was successful (exit status 0)
     echo "The previous command was successful."
 else
-    echo "The previous command failed."
-fi
-
-# -------------------------------------------------------
-# Trap
-# The `trap` command is used to catch signals (like Ctrl+C) and perform actions before exiting the script.
-
-trap 'echo "Ctrl+C was pressed!"' SIGINT  # Catch Ctrl+C signal
-echo "Press Ctrl+C to see the trap in action"
-
-# -------------------------------------------------------
-# Comments
-# Comments are lines of text in the script that are not executed. They are useful for adding explanations and notes.
-
-# This is a comment explaining the code below.
-echo "This is a comment in the script"  # This is an inline comment
+    echo
